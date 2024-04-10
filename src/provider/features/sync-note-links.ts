@@ -270,10 +270,20 @@ export class SyncNoteLinks {
                     this.ctrl.config.getFileLinkInlineTemplate()
                         .then(tpl => {
                             // fix for #70 
-                            const pathToLinkedFile: Path.ParsedPath = Path.parse(file.fsPath);
-                            const pathToEntry: Path.ParsedPath = Path.parse(doc.uri.fsPath);
-                            const relativePath = Path.relative(pathToEntry.dir, pathToLinkedFile.dir);
-                            const link = Path.join(relativePath, pathToLinkedFile.name + pathToLinkedFile.ext);
+                            const pathToLinkedFile: Path.ParsedPath = Path.posix.parse(
+                                file.fsPath.replace(/\\/g, "/")
+                              );
+                              const pathToEntry: Path.ParsedPath = Path.posix.parse(
+                                doc.uri.fsPath.replace(/\\/g, "/")
+                              );
+                              const relativePath = Path.posix.relative(
+                                pathToEntry.dir,
+                                pathToLinkedFile.dir
+                              );
+                              const link = Path.posix.join(
+                                relativePath,
+                                pathToLinkedFile.name + pathToLinkedFile.ext
+                              );
     
                             let title = pathToLinkedFile.name.replace(/_/g, " ");
                             if (pathToLinkedFile.ext.substr(1, pathToLinkedFile.ext.length) !== this.ctrl.config.getFileExtension()) {
